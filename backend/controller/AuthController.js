@@ -7,7 +7,9 @@ const registerUser = async (req, res) => {
 
   const existingUser = await UserModel.findOne({ email });
   if (existingUser) {
-    return res.status(400).json({ message: "Email already exists", success : false });
+    return res
+      .status(400)
+      .json({ message: "Email already exists", success: false });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -16,32 +18,34 @@ const registerUser = async (req, res) => {
   const user = new UserModel({ email, password: hashedPassword });
   await user.save();
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
-
-  res.status(200).json({ token });
+  res.status(200).json({ message: "Registration Successful", success: true });
 };
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(401).json({ message: "email or password is not found" });
+    return res
+      .status(401)
+      .json({ success: false, message: "email or password is not found" });
   }
 
   const user = await UserModel.findOne({ email });
   if (!user) {
-    return res.status(401).json({ message: "email or password is not found" });
+    return res
+      .status(401)
+      .json({ success: false, message: "email or password is not found" });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json({ message: "email or password is not found" });
+    return res
+      .status(401)
+      .json({ success: false, message: "email or password is not found" });
   }
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
-  res.status(200).json({ token });
+  res.status(200).json({ token: token, success: true, user: user });
 };
 
 module.exports = {
