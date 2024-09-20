@@ -1,8 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import LandingPage from "./Pages/LandingPage.jsx";
 import Login from "./Pages/Login.jsx";
 import { ClerkProvider } from "@clerk/clerk-react";
@@ -25,7 +28,12 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignOutUrl="/"
+      routerPush={(to) => <Navigate to={to} />}
+      routerReplace={(to) => <Navigate to={to} replace={true} />}
+    >
       <RouterProvider router={router} />
     </ClerkProvider>
   </StrictMode>
