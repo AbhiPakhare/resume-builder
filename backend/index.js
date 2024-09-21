@@ -11,7 +11,7 @@ app.use(expresss.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("hello world from aws");
+  res.send("hello Internet let'sss goooo");
 });
 app.use("/auth", AuthRoutes);
 app.get("/login", (req, res) => {
